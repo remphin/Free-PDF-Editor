@@ -45,6 +45,7 @@ export interface Translations {
     emptyQueueDesc: string;
     errorInvalidFile: string;
     errorGeneric: string;
+    privacyTitle: string;
     privacyNote: string;
   };
   merge: {
@@ -241,7 +242,9 @@ export const translations: Record<Language, Translations> = {
       emptyQueueDesc: 'Başlamak için yukarıdaki alana dosya bırakın veya örnek dosyalarla hemen test edin.',
       errorInvalidFile: 'Desteklenmeyen dosya formatı atlandı.',
       errorGeneric: 'İşlem sırasında bir hata oluştu. Lütfen dosyayı kontrol edip tekrar deneyin.',
-      privacyNote: 'Dosyalarınız sunucuya yüklenmez; tüm işlemler tarayıcınızda yerel olarak yapılır.',
+      privacyTitle: 'Dosyalarınız Güvende — %100 Tarayıcı İçi İşlem',
+      privacyNote:
+        'Yüklediğiniz PDF, Word, Excel ve görsel dosyaları hiçbir sunucuya yüklenmez veya kaydedilmez. Tüm işlemler doğrudan kendi tarayıcınızda gerçekleşir; dosyalarınız cihazınızdan dışarı çıkmaz.',
     },
     merge: {
       fileQueueTitle: 'Birleştirilecek PDF Sırası',
@@ -456,7 +459,9 @@ export const translations: Record<Language, Translations> = {
       emptyQueueDesc: 'Drop files into the upload zone above or load deterministic sample files to try it out.',
       errorInvalidFile: 'Unsupported file format skipped.',
       errorGeneric: 'An error occurred while processing. Please verify the file and try again.',
-      privacyNote: 'Files stay on your device; all PDF operations execute locally in your browser.',
+      privacyTitle: 'Your Files Stay Private — 100% In-Browser Processing',
+      privacyNote:
+        'Your PDF, Word, Excel, and image files are never uploaded to or stored on any server. All processing happens locally inside your browser so your documents never leave your device.',
     },
     merge: {
       fileQueueTitle: 'PDF Merge Queue',

@@ -60,12 +60,23 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-200 bg-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" aria-hidden="true" />
-            <span>{t.common.privacyNote}</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-3.5 flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <p className="font-display text-sm font-semibold text-slate-900">
+                {t.common.privacyTitle}
+              </p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 leading-relaxed">
+                {t.common.privacyNote}
+              </p>
+            </div>
           </div>
-          <span>Remphin / Powered by Serkan Çakmak</span>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 pt-1">
+            <span>{t.appName}</span>
+            <span>Remphin / Powered by Serkan Çakmak</span>
+          </div>
         </div>
       </footer>
     </div>
