@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Rich Word Editor Document Canvas Styling */
+.word-editor-surface {
+  color: #0f172a;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.word-editor-surface h1 {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1.25rem;
+  margin-bottom: 0.65rem;
+  line-height: 1.25;
+}
+
+.word-editor-surface h2 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-top: 1.1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.word-editor-surface h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.word-editor-surface p {
+  margin-bottom: 0.75rem;
+}
+
+.word-editor-surface ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.word-editor-surface ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.word-editor-surface li {
+  margin-bottom: 0.25rem;
+}
+
+.word-editor-surface table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.word-editor-surface th,
+.word-editor-surface td {
+  border: 1px solid #cbd5e1;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.word-editor-surface th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+}
+
+.word-editor-surface .doc-page-break {
+  border: none;
+  border-top: 2px dashed #cbd5e1;
+  margin: 1.75rem 0;
+  position: relative;
+  height: 0;
+}
+
+.word-editor-surface .doc-page-break::after {
+  content: attr(data-label);
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  padding: 0 10px;
+  font-size: 11px;
+  color: #64748b;
+  font-family: var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
