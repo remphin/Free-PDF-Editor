@@ -10,9 +10,9 @@ interface HeaderProps {
 
 export function Header({ activeTab, onTabChange, lang, onLangChange, t }: HeaderProps) {
   const navItems: Array<{ id: ToolTab; label: string }> = [
+    { id: 'home', label: t.nav.home },
     { id: 'merge', label: t.nav.merge },
     { id: 'split', label: t.nav.split },
-    { id: 'word', label: t.nav.word },
     { id: 'convert', label: t.nav.convert },
     { id: 'compress', label: t.nav.compress },
   ];
@@ -25,14 +25,14 @@ export function Header({ activeTab, onTabChange, lang, onLangChange, t }: Header
           href="#top"
           onClick={(e) => {
             e.preventDefault();
-            onTabChange('merge');
+            onTabChange('home');
           }}
           className="font-display text-lg font-bold tracking-tight text-slate-900 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded"
         >
           {t.appName}
         </a>
 
-        {/* Zone 2: 4 Single-line Tool Links */}
+        {/* Zone 2: 5 Concise Single-line Quick Links */}
         <nav aria-label="Main tools" className="hidden md:flex items-center gap-6">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
@@ -95,7 +95,7 @@ export function Header({ activeTab, onTabChange, lang, onLangChange, t }: Header
         </div>
       </div>
 
-      {/* Mobile compact single-row tool bar */}
+      {/* Mobile compact single-row quick nav */}
       <nav
         aria-label="Mobile tools"
         className="md:hidden border-t border-slate-100 grid grid-cols-5 bg-white"
@@ -108,7 +108,7 @@ export function Header({ activeTab, onTabChange, lang, onLangChange, t }: Header
               type="button"
               onClick={() => onTabChange(item.id)}
               aria-current={isActive ? 'page' : undefined}
-              className={`px-0.5 py-2.5 text-[10.5px] font-medium text-center truncate border-b-2 transition-colors ${
+              className={`px-0.5 py-2.5 text-[11px] font-medium text-center truncate border-b-2 transition-colors ${
                 isActive
                   ? 'border-blue-700 text-blue-700'
                   : 'border-transparent text-slate-600 hover:text-slate-900'

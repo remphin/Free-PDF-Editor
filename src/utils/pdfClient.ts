@@ -8,8 +8,11 @@ import {
   addPageNumbersToPdfDocument,
   buildA4ImagePlacement,
   isWinAnsiCompatible,
+  normalizeRawPdfEnvelope,
+  repairPdfStructure,
   sanitizeForWinAnsi,
   type PageNumberOptions,
+  type RepairDiagnostics,
   type UnicodeStampResult,
 } from './pdfCore';
 
@@ -565,6 +568,138 @@ export async function createSampleImageBytes(lang: Language): Promise<{ bytes: U
     bytes: new Uint8Array(await blob.arrayBuffer()),
     mimeType: 'image/png',
   };
+}
+
+export interface RenderedPageImage {
+  pageNumber: number;
+  bytes: Uint8Array;
+  dataUrl: string;
+  width: number;
+  height: number;
+}
+
+export async function renderPdfPagesToImages(
+  pdfBytes: Uint8Array,
+  format: 'png' | 'jpg',
+  scale: 1 | 2 | 3,
+): Promise<RenderedPageImage[]> {
+  const loadingTask = pdfjsLib.getDocument({ data: pdfBytes.slice() });
+  const pdf = await loadingTask.promise;
+  const results: RenderedPageImage[] = [];
+
+  try {
+    const mime = format === 'png' ? 'image/png' : 'image/jpeg';
+    const quality = format === 'png' ? undefined : 0.9;
+
+    for (let i = 1; i <= pdf.numPages; i += 1) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+      const ctx = canvas.getContext('2d');
+      if (!ctx) continue;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport, canvas }).promise;
+
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error('Page image export failed'))),
+          mime,
+          quality,
+        );
+      });
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      const dataUrl = canvas.toDataURL(mime, quality);
+      results.push({
+        pageNumber: i,
+        bytes,
+        dataUrl,
+        width: canvas.width,
+        height: canvas.height,
+      });
+    }
+  } finally {
+    await loadingTask.destroy();
+  }
+
+  return results;
+}
+
+export async function repairPdfBytesWithFallback(
+  rawBytes: Uint8Array,
+): Promise<{ bytes: Uint8Array; diagnostics: RepairDiagnostics }> {
+  try {
+    return await repairPdfStructure(rawBytes);
+  } catch {
+    // Fallback to tolerant pdf.js recovery and rebuild clean pages
+    const { bytes: normalizedBytes, headerNormalized, eofRestored } =
+      normalizeRawPdfEnvelope(rawBytes);
+
+    const loadingTask = pdfjsLib.getDocument({ data: normalizedBytes.slice() });
+    const pdf = await loadingTask.promise;
+    try {
+      const outDoc = await PDFDocument.create();
+      let recoveredPages = 0;
+
+      for (let i = 1; i <= pdf.numPages; i += 1) {
+        try {
+          const page = await pdf.getPage(i);
+          const baseViewport = page.getViewport({ scale: 1.0 });
+          const renderViewport = page.getViewport({ scale: 1.75 });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.floor(renderViewport.width));
+          canvas.height = Math.max(1, Math.floor(renderViewport.height));
+          const ctx = canvas.getContext('2d');
+          if (!ctx) continue;
+
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          await page.render({ canvasContext: ctx, viewport: renderViewport, canvas }).promise;
+
+          const jpgBlob = await new Promise<Blob>((resolve, reject) => {
+            canvas.toBlob(
+              (b) => (b ? resolve(b) : reject(new Error('Recovery render failed'))),
+              'image/jpeg',
+              0.88,
+            );
+          });
+          const jpgBytes = new Uint8Array(await jpgBlob.arrayBuffer());
+          const jpgImg = await outDoc.embedJpg(jpgBytes);
+          const newPage = outDoc.addPage([baseViewport.width, baseViewport.height]);
+          newPage.drawImage(jpgImg, {
+            x: 0,
+            y: 0,
+            width: baseViewport.width,
+            height: baseViewport.height,
+          });
+          recoveredPages += 1;
+        } catch {
+          // Skip unreadable page
+        }
+      }
+
+      if (recoveredPages === 0) {
+        throw new Error('NO_RECOVERABLE_PAGES');
+      }
+
+      const bytes = new Uint8Array(await outDoc.save({ useObjectStreams: true }));
+      return {
+        bytes,
+        diagnostics: {
+          headerNormalized,
+          eofRestored,
+          xrefRebuilt: true,
+          rasterFallbackUsed: true,
+          recoveredPages,
+        },
+      };
+    } finally {
+      await loadingTask.destroy();
+    }
+  }
 }
 
 export function triggerBytesDownload(bytes: Uint8Array, filename: string, mimeType = 'application/pdf'): void {

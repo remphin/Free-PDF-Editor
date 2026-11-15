@@ -1,28 +1,47 @@
 export type Language = 'tr' | 'en';
 
-export type ToolTab = 'merge' | 'split' | 'word' | 'convert' | 'compress';
+export type ToolId =
+  | 'merge'
+  | 'split'
+  | 'organize'
+  | 'rotate'
+  | 'compress'
+  | 'convert'
+  | 'pdf2img'
+  | 'word'
+  | 'watermark'
+  | 'encrypt'
+  | 'unlock'
+  | 'repair';
+
+export type ToolTab = 'home' | ToolId;
+
+export type ToolCategory = 'all' | 'organize' | 'convert' | 'security';
+
+export interface ToolCardMeta {
+  title: string;
+  desc: string;
+  category: Exclude<ToolCategory, 'all'>;
+}
 
 export interface Translations {
   appName: string;
   nav: {
+    home: string;
     merge: string;
     split: string;
-    word: string;
     convert: string;
     compress: string;
   };
-  hero: {
-    mergeTitle: string;
-    mergeDesc: string;
-    splitTitle: string;
-    splitDesc: string;
-    wordTitle: string;
-    wordDesc: string;
-    convertTitle: string;
-    convertDesc: string;
-    compressTitle: string;
-    compressDesc: string;
+  home: {
+    title: string;
+    subtitle: string;
+    backToAll: string;
+    categories: Record<ToolCategory, string>;
+    tools: Record<ToolId, ToolCardMeta>;
+    openTool: string;
   };
+  hero: Record<ToolId, { title: string; desc: string }>;
   common: {
     dropTitle: string;
     dropHint: string;
@@ -105,6 +124,137 @@ export interface Translations {
     downloadAll: string;
     noSelectionError: string;
     invalidRangeError: string;
+  };
+  organize: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    gridTitle: string;
+    moveLeft: string;
+    moveRight: string;
+    duplicatePage: string;
+    deletePage: string;
+    resetOrder: string;
+    applyButton: string;
+    resultTitle: string;
+    minOnePageError: string;
+  };
+  rotate: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    gridTitle: string;
+    rotateAllLeft: string;
+    rotateAllRight: string;
+    rotateAll180: string;
+    resetAll: string;
+    rotateLeft: string;
+    rotateRight: string;
+    applyButton: string;
+    resultTitle: string;
+    angleLabel: string;
+  };
+  watermark: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    settingsTitle: string;
+    textLabel: string;
+    defaultText: string;
+    layoutLabel: string;
+    layouts: {
+      diagonal: string;
+      tiled: string;
+      footer: string;
+    };
+    opacityLabel: string;
+    fontSizeLabel: string;
+    colorLabel: string;
+    colors: {
+      slate: string;
+      crimson: string;
+      blue: string;
+    };
+    previewLabel: string;
+    applyButton: string;
+    resultTitle: string;
+    emptyTextError: string;
+  };
+  pdf2img: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    formatLabel: string;
+    scaleLabel: string;
+    scales: {
+      '1': string;
+      '2': string;
+      '3': string;
+    };
+    convertButton: string;
+    resultsTitle: string;
+    downloadImage: string;
+    downloadAll: string;
+  };
+  encrypt: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    settingsTitle: string;
+    userPasswordLabel: string;
+    userPasswordPlaceholder: string;
+    confirmPasswordLabel: string;
+    confirmPasswordPlaceholder: string;
+    ownerPasswordLabel: string;
+    ownerPasswordPlaceholder: string;
+    permissionsLabel: string;
+    allowPrinting: string;
+    allowCopying: string;
+    allowModifying: string;
+    encryptButton: string;
+    resultTitle: string;
+    resultNote: string;
+    passwordRequiredError: string;
+    passwordMismatchError: string;
+    alreadyEncryptedError: string;
+  };
+  unlock: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    sampleHint: string;
+    statusLocked: string;
+    statusUnlocked: string;
+    passwordLabel: string;
+    passwordPlaceholder: string;
+    unlockButton: string;
+    resultTitle: string;
+    wrongPasswordError: string;
+    passwordNeededError: string;
+    notEncryptedNote: string;
+  };
+  repair: {
+    dropTitle: string;
+    dropHint: string;
+    selectPdf: string;
+    loadSample: string;
+    diagnosticsTitle: string;
+    repairButton: string;
+    resultTitle: string;
+    statusHealthy: string;
+    statusRecovered: string;
+    headerNormalized: string;
+    eofRestored: string;
+    xrefRebuilt: string;
+    rasterFallbackUsed: string;
+    pagesRecoveredLabel: string;
+    cannotRepairError: string;
   };
   word: {
     queueTitle: string;
@@ -202,23 +352,136 @@ export const translations: Record<Language, Translations> = {
   tr: {
     appName: 'PDF Labs',
     nav: {
-      merge: 'PDF Birleştir',
-      split: 'PDF Ayır',
-      word: 'Word Stüdyo',
-      convert: 'PDF Dönüştür',
-      compress: 'PDF Sıkıştır',
+      home: 'Tüm Araçlar',
+      merge: 'Birleştir',
+      split: 'Ayır',
+      convert: 'Dönüştür',
+      compress: 'Sıkıştır',
+    },
+    home: {
+      title: 'Tüm PDF ve Belge Araçları Tek Yerde',
+      subtitle:
+        'Birleştirme, ayırma, döndürme, sıkıştırma, şifreleme, onarım ve dönüştürme araçlarının tamamı doğrudan tarayıcınızda çalışır.',
+      backToAll: 'Tüm Araçlar',
+      openTool: 'Aracı Aç',
+      categories: {
+        all: 'Tümü (12)',
+        organize: 'Sayfa Düzenleme',
+        convert: 'Dönüştürme & Word',
+        security: 'Güvenlik & Onarım',
+      },
+      tools: {
+        merge: {
+          title: 'PDF Birleştir',
+          desc: 'Birden fazla PDF dosyasını sıraya koyun ve tek tek sayfa numarası verin.',
+          category: 'organize',
+        },
+        split: {
+          title: 'PDF Ayır',
+          desc: 'Sayfaları tek tek veya seçtiğiniz aralıklarla bağımsız PDF yapın.',
+          category: 'organize',
+        },
+        organize: {
+          title: 'Sayfa Sırala & Sil',
+          desc: 'PDF içindeki sayfaların yerini değiştirin, kopyalayın veya silin.',
+          category: 'organize',
+        },
+        rotate: {
+          title: 'PDF Döndür',
+          desc: 'Sayfaları tek tek veya topluca 90° sola, sağa ya da 180° döndürün.',
+          category: 'organize',
+        },
+        compress: {
+          title: 'PDF Sıkıştır',
+          desc: 'Kalite seviyesini seçerek PDF dosya boyutunu hızla küçültün.',
+          category: 'organize',
+        },
+        convert: {
+          title: 'PDF Dönüştür',
+          desc: 'Görsel, Word (.docx) ve Excel (.xlsx, .csv) dosyalarını PDF yapın.',
+          category: 'convert',
+        },
+        pdf2img: {
+          title: 'PDF’den Görsele',
+          desc: 'PDF sayfalarını yüksek çözünürlüklü PNG veya JPG olarak dışa aktarın.',
+          category: 'convert',
+        },
+        word: {
+          title: 'Word Stüdyo',
+          desc: 'Birden çok Word belgesini birleştirip düzenleyin, PDF/DOCX kaydedin.',
+          category: 'convert',
+        },
+        watermark: {
+          title: 'Filigran Ekle',
+          desc: 'Tüm sayfalara şeffaf metin filigranı ve damga yerleştirin.',
+          category: 'security',
+        },
+        encrypt: {
+          title: 'PDF Şifrele',
+          desc: 'Belgeye açılış parolası ve yazdırma/kopyalama izin kilidi ekleyin.',
+          category: 'security',
+        },
+        unlock: {
+          title: 'PDF Şifre Kaldır',
+          desc: 'Parolasını bildiğiniz PDF’in şifre ve izin kilidini kalıcı olarak açın.',
+          category: 'security',
+        },
+        repair: {
+          title: 'PDF Onar',
+          desc: 'Hasarlı XRef tablosu veya bozuk yapılı PDF dosyalarını kurtarın.',
+          category: 'security',
+        },
+      },
     },
     hero: {
-      mergeTitle: 'PDF Dosyalarını Birleştir ve Numaralandır',
-      mergeDesc: 'Birden fazla PDF dosyasını sıraya koyun, sayfa numarası konumunu ve biçimini seçerek tek dosyada birleştirin.',
-      splitTitle: 'PDF Sayfalarını Bağımsız Dosyalara Ayır',
-      splitDesc: 'Tek bir sayfayı ya da seçtiğiniz sayfa aralıklarını saniyeler içinde bağımsız PDF dosyalarına dönüştürün.',
-      wordTitle: 'Word Dosyalarını Birleştir, Düzenle ve Kaydet',
-      wordDesc: 'Birden çok Word (.docx) belgesini tek editörde birleştirip düzenleyin; doğrudan PDF veya Word olarak kaydedin.',
-      convertTitle: 'Görsel, Word ve Excel Dosyalarını PDF Yap',
-      convertDesc: 'PNG, JPG, WebP görselleri, Excel tablolarını (.xlsx, .csv) ve Word belgelerini saniyeler içinde PDF’e dönüştürün.',
-      compressTitle: 'PDF Dosya Boyutunu Hızla Küçült',
-      compressDesc: 'Kalite ve boyut dengesini seçerek PDF belgelerinizi kalite kaybı olmadan sıkıştırın.',
+      merge: {
+        title: 'PDF Dosyalarını Birleştir ve Numaralandır',
+        desc: 'Birden fazla PDF dosyasını sıraya koyun, sayfa numarası konumunu ve biçimini seçerek tek dosyada birleştirin.',
+      },
+      split: {
+        title: 'PDF Sayfalarını Bağımsız Dosyalara Ayır',
+        desc: 'Tek bir sayfayı ya da seçtiğiniz sayfa aralıklarını saniyeler içinde bağımsız PDF dosyalarına dönüştürün.',
+      },
+      organize: {
+        title: 'PDF Sayfalarını Sırala, Kopyala ve Sil',
+        desc: 'Sayfaları görsel önizleme ile yeniden sıralayın, istemediklerinizi çıkarın ve temiz PDF olarak kaydedin.',
+      },
+      rotate: {
+        title: 'PDF Sayfalarını Döndür',
+        desc: 'Tek bir sayfayı veya tüm belgeyi 90° sola, sağa ya da 180° döndürerek kalıcı olarak kaydedin.',
+      },
+      compress: {
+        title: 'PDF Dosya Boyutunu Hızla Küçült',
+        desc: 'Kalite ve boyut dengesini seçerek PDF belgelerinizi kalite kaybı olmadan sıkıştırın.',
+      },
+      convert: {
+        title: 'Görsel, Word ve Excel Dosyalarını PDF Yap',
+        desc: 'PNG, JPG, WebP görselleri, Excel tablolarını (.xlsx, .csv) ve Word belgelerini saniyeler içinde PDF’e dönüştürün.',
+      },
+      pdf2img: {
+        title: 'PDF Sayfalarını Görsele Dönüştür (PNG / JPG)',
+        desc: 'PDF belgesindeki her sayfayı seçtiğiniz çözünürlükte net PNG veya JPG dosyalarına dönüştürün.',
+      },
+      word: {
+        title: 'Word Dosyalarını Birleştir, Düzenle ve Kaydet',
+        desc: 'Birden çok Word (.docx) belgesini tek editörde birleştirip düzenleyin; doğrudan PDF veya Word olarak kaydedin.',
+      },
+      watermark: {
+        title: 'PDF Sayfalarına Metin Filigranı Ekle',
+        desc: 'Belgelerinize saydamlık, açı, boyut ve yerleşim ayarıyla özel metin filigranı damgalayın.',
+      },
+      encrypt: {
+        title: 'PDF Dosyasını Parola ile Şifrele',
+        desc: 'PDF belgenizi 128-bit şifreleme ile koruyun; yazdırma, kopyalama ve düzenleme izinlerini belirleyin.',
+      },
+      unlock: {
+        title: 'PDF Parolasını ve Kısıtlamalarını Kaldır',
+        desc: 'Şifreli PDF dosyasının parolasını girerek kilidi kaldırın ve şifresiz kopyasını indirin.',
+      },
+      repair: {
+        title: 'Bozuk veya Hasarlı PDF Dosyasını Onar',
+        desc: 'Eksik son işaretçisi, bozuk XRef tablosu veya açılmayan yapıya sahip PDF’leri tarayıcı içinde kurtarın.',
+      },
     },
     common: {
       dropTitle: 'Dosyaları buraya sürükleyip bırakın',
@@ -315,6 +578,137 @@ export const translations: Record<Language, Translations> = {
       downloadAll: 'Tümünü İndir',
       noSelectionError: 'Lütfen en az bir sayfa seçin.',
       invalidRangeError: 'Lütfen geçerli sayfa numaraları veya aralıkları girin.',
+    },
+    organize: {
+      dropTitle: 'Düzenlenecek PDF dosyasını buraya bırakın',
+      dropHint: 'Sayfaların sırasını değiştirin, kopyalayın veya gereksiz sayfaları silin',
+      selectPdf: 'PDF Seç',
+      loadSample: '4 Sayfalık Örnek PDF Yükle',
+      gridTitle: 'Sayfa Sırası ve Düzenleme',
+      moveLeft: 'Sola taşı',
+      moveRight: 'Sağa taşı',
+      duplicatePage: 'Sayfayı çoğalt',
+      deletePage: 'Sayfayı sil',
+      resetOrder: 'Sırayı Sıfırla',
+      applyButton: 'Yeni Sırayla Kaydet',
+      resultTitle: 'Düzenlenen PDF Hazır',
+      minOnePageError: 'Belgede en az 1 sayfa kalmalıdır.',
+    },
+    rotate: {
+      dropTitle: 'Döndürülecek PDF dosyasını buraya bırakın',
+      dropHint: 'Her sayfayı bağımsız döndürebilir veya tek tıkla tüm belgeye açı uygulayabilirsiniz',
+      selectPdf: 'PDF Seç',
+      loadSample: 'Örnek PDF Yükle',
+      gridTitle: 'Sayfa Önizleme ve Döndürme',
+      rotateAllLeft: 'Tümünü 90° Sola',
+      rotateAllRight: 'Tümünü 90° Sağa',
+      rotateAll180: 'Tümünü 180°',
+      resetAll: 'Sıfırla',
+      rotateLeft: '90° Sola Döndür',
+      rotateRight: '90° Sağa Döndür',
+      applyButton: 'Döndürülmüş PDF’i Kaydet',
+      resultTitle: 'Döndürülmüş PDF Hazır',
+      angleLabel: 'Açı',
+    },
+    watermark: {
+      dropTitle: 'Filigran eklenecek PDF dosyasını bırakın',
+      dropHint: 'Belgelerinize çapraz, döşemeli veya alt/üst bilgi filigranı ekleyin',
+      selectPdf: 'PDF Seç',
+      loadSample: 'Örnek PDF Yükle',
+      settingsTitle: 'Filigran Ayarları',
+      textLabel: 'Filigran Metni',
+      defaultText: 'GİZLİ BELGE',
+      layoutLabel: 'Yerleşim Düzeni',
+      layouts: {
+        diagonal: 'Orta Çapraz (-45°)',
+        tiled: 'Sayfaya Döşeli (Grid)',
+        footer: 'Üst / Alt Damga',
+      },
+      opacityLabel: 'Saydamlık',
+      fontSizeLabel: 'Yazı Boyutu',
+      colorLabel: 'Renk',
+      colors: {
+        slate: 'Koyu Gri',
+        crimson: 'Kırmızı',
+        blue: 'Lacivert',
+      },
+      previewLabel: 'Canlı Konum Önizleme',
+      applyButton: 'Filigran Uygula',
+      resultTitle: 'Filigranlı PDF Hazır',
+      emptyTextError: 'Lütfen filigran metni girin.',
+    },
+    pdf2img: {
+      dropTitle: 'Görsele çevrilecek PDF dosyasını bırakın',
+      dropHint: 'Sayfaları yüksek kaliteli PNG veya JPG görsellere dönüştürün',
+      selectPdf: 'PDF Seç',
+      loadSample: 'Örnek PDF Yükle',
+      formatLabel: 'Çıktı Formatı',
+      scaleLabel: 'Çözünürlük Kalitesi',
+      scales: {
+        '1': 'Standart (1x)',
+        '2': 'Yüksek (2x — Önerilen)',
+        '3': 'Ultra Net (3x)',
+      },
+      convertButton: 'Görsellere Dönüştür',
+      resultsTitle: 'Oluşturulan Sayfa Görselleri',
+      downloadImage: 'Görseli İndir',
+      downloadAll: 'Tümünü İndir',
+    },
+    encrypt: {
+      dropTitle: 'Şifrelenecek PDF dosyasını buraya bırakın',
+      dropHint: 'Açılış parolası ve belge izinlerini tarayıcınızda güvenle tanımlayın',
+      selectPdf: 'PDF Seç',
+      loadSample: 'Örnek PDF Yükle',
+      settingsTitle: 'Parola ve İzin Ayarları',
+      userPasswordLabel: 'Açılış Parolası (Zorunlu)',
+      userPasswordPlaceholder: 'Belgeyi açmak için parola girin',
+      confirmPasswordLabel: 'Parolayı Doğrula',
+      confirmPasswordPlaceholder: 'Parolayı tekrar girin',
+      ownerPasswordLabel: 'Yönetici Parolası (İsteğe Bağlı)',
+      ownerPasswordPlaceholder: 'Boş bırakılırsa açılış parolası kullanılır',
+      permissionsLabel: 'Belge İzinleri',
+      allowPrinting: 'Yazdırmaya izin ver',
+      allowCopying: 'Metin ve görsel kopyalamaya izin ver',
+      allowModifying: 'Belge düzenlemeye izin ver',
+      encryptButton: 'PDF’i Şifrele',
+      resultTitle: 'Şifreli PDF Hazır',
+      resultNote: 'Bu PDF artık açılışta belirlediğiniz parolayı isteyecektir.',
+      passwordRequiredError: 'Lütfen bir açılış parolası belirleyin.',
+      passwordMismatchError: 'Girdiğiniz parolalar birbiriyle eşleşmiyor.',
+      alreadyEncryptedError: 'Bu PDF zaten şifreli. Önce PDF Şifre Kaldır aracını kullanın.',
+    },
+    unlock: {
+      dropTitle: 'Kilidi açılacak şifreli PDF’i bırakın',
+      dropHint: 'Parolasını bildiğiniz PDF dosyasından şifre ve kısıtlamaları kaldırın',
+      selectPdf: 'Şifreli PDF Seç',
+      loadSample: 'Örnek Şifreli PDF Yükle (Parola: 1234)',
+      sampleHint: 'Test etmek için örnek kilitli PDF yükleyip parola alanına 1234 yazabilirsiniz.',
+      statusLocked: 'Parola korumalı PDF algılandı',
+      statusUnlocked: 'Bu PDF açık (kısıtlama temizlenebilir)',
+      passwordLabel: 'PDF Parolası',
+      passwordPlaceholder: 'Belgenin mevcut parolasını girin',
+      unlockButton: 'Şifreyi Kaldır',
+      resultTitle: 'Kilidi Açılmış PDF Hazır',
+      wrongPasswordError: 'Girilen parola yanlış. Lütfen kontrol edip tekrar deneyin.',
+      passwordNeededError: 'Bu PDF açılış parolası ile korunuyor. Lütfen parolayı girin.',
+      notEncryptedNote: 'Dosyada açılış parolası yok; yine de temiz, kısıtlamasız kopya üretildi.',
+    },
+    repair: {
+      dropTitle: 'Hasarlı veya açılmayan PDF dosyasını bırakın',
+      dropHint: 'Bozuk XRef tablosu, eksik EOF veya hatalı başlık yapısını tarayıcıda kurtarın',
+      selectPdf: 'PDF Seç',
+      loadSample: 'Örnek Hasarlı PDF Yükle',
+      diagnosticsTitle: 'Onarım Raporu',
+      repairButton: 'PDF’i Onar ve Kurtar',
+      resultTitle: 'Onarılmış PDF Hazır',
+      statusHealthy: 'Yapısal doğrulama ve yeniden paketleme tamamlandı',
+      statusRecovered: 'Hasar tespit edildi ve sayfalar başarıyla kurtarıldı',
+      headerNormalized: 'Başlık (%PDF-) öncesi bozuk baytlar temizlendi',
+      eofRestored: 'Eksik %%EOF sonlandırıcı işareti onarıldı',
+      xrefRebuilt: 'XRef çapraz referans tablosu ve nesne akışı yeniden kuruldu',
+      rasterFallbackUsed: 'Ağır yapısal hasar nedeniyle sayfalar yüksek çözünürlüklü görüntü kurtarma ile yeniden üretildi',
+      pagesRecoveredLabel: 'Kurtarılan Sayfa',
+      cannotRepairError: 'Dosya kurtarılamayacak kadar bozuk veya geçerli bir PDF verisi içermiyor.',
     },
     word: {
       queueTitle: 'Word Belgeleri (.docx)',
@@ -419,23 +813,136 @@ export const translations: Record<Language, Translations> = {
   en: {
     appName: 'PDF Labs',
     nav: {
-      merge: 'Merge PDF',
-      split: 'Split PDF',
-      word: 'Word Studio',
-      convert: 'Convert to PDF',
-      compress: 'Compress PDF',
+      home: 'All Tools',
+      merge: 'Merge',
+      split: 'Split',
+      convert: 'Convert',
+      compress: 'Compress',
+    },
+    home: {
+      title: 'Every PDF & Document Tool in One Place',
+      subtitle:
+        'Merge, split, rotate, compress, encrypt, unlock, repair, and convert documents directly inside your browser.',
+      backToAll: 'All Tools',
+      openTool: 'Open Tool',
+      categories: {
+        all: 'All (12)',
+        organize: 'Organize & Optimize',
+        convert: 'Convert & Word',
+        security: 'Security & Repair',
+      },
+      tools: {
+        merge: {
+          title: 'Merge PDF',
+          desc: 'Arrange multiple PDFs in order and add individual page numbers.',
+          category: 'organize',
+        },
+        split: {
+          title: 'Split PDF',
+          desc: 'Extract single pages or split custom ranges into separate PDFs.',
+          category: 'organize',
+        },
+        organize: {
+          title: 'Organize Pages',
+          desc: 'Reorder, duplicate, or delete individual pages with thumbnails.',
+          category: 'organize',
+        },
+        rotate: {
+          title: 'Rotate PDF',
+          desc: 'Rotate individual pages or the whole PDF 90° left, right, or 180°.',
+          category: 'organize',
+        },
+        compress: {
+          title: 'Compress PDF',
+          desc: 'Shrink large PDF file sizes quickly with selectable quality presets.',
+          category: 'organize',
+        },
+        convert: {
+          title: 'Convert to PDF',
+          desc: 'Turn images, Word (.docx), and Excel (.xlsx, .csv) into crisp PDFs.',
+          category: 'convert',
+        },
+        pdf2img: {
+          title: 'PDF to Images',
+          desc: 'Export every PDF page as high-resolution PNG or JPG images.',
+          category: 'convert',
+        },
+        word: {
+          title: 'Word Studio',
+          desc: 'Merge and live-edit Word documents, then export as PDF or DOCX.',
+          category: 'convert',
+        },
+        watermark: {
+          title: 'Watermark PDF',
+          desc: 'Stamp diagonal, tiled, or footer text watermarks across pages.',
+          category: 'security',
+        },
+        encrypt: {
+          title: 'Encrypt PDF',
+          desc: 'Add an open password and control print, copy, or edit permissions.',
+          category: 'security',
+        },
+        unlock: {
+          title: 'Unlock PDF',
+          desc: 'Enter the password to remove protection and save an unlocked PDF.',
+          category: 'security',
+        },
+        repair: {
+          title: 'Repair PDF',
+          desc: 'Recover PDFs with damaged XRef tables, headers, or EOF markers.',
+          category: 'security',
+        },
+      },
     },
     hero: {
-      mergeTitle: 'Merge PDFs & Add Page Numbers',
-      mergeDesc: 'Arrange multiple PDF files in order, choose page number placement and format, and merge into one clean document.',
-      splitTitle: 'Split PDF into Independent Files',
-      splitDesc: 'Extract a single page or split multiple pages and custom ranges into separate standalone PDF files.',
-      wordTitle: 'Merge, Edit & Save Word Documents',
-      wordDesc: 'Combine multiple Word (.docx) files into a live rich-text editor, edit freely, and export as PDF or Word.',
-      convertTitle: 'Convert Images, Word & Excel to PDF',
-      convertDesc: 'Turn PNG, JPG, WebP images, Excel spreadsheets (.xlsx, .csv), and Word files into crisp PDFs in seconds.',
-      compressTitle: 'Compress PDF File Size',
-      compressDesc: 'Shrink large PDF files quickly with selectable quality presets and exact before/after byte savings.',
+      merge: {
+        title: 'Merge PDFs & Add Page Numbers',
+        desc: 'Arrange multiple PDF files in order, choose page number placement and format, and merge into one clean document.',
+      },
+      split: {
+        title: 'Split PDF into Independent Files',
+        desc: 'Extract a single page or split multiple pages and custom ranges into separate standalone PDF files.',
+      },
+      organize: {
+        title: 'Reorder, Duplicate & Delete PDF Pages',
+        desc: 'Preview every page as a thumbnail, adjust the order, remove unwanted pages, and save a clean PDF.',
+      },
+      rotate: {
+        title: 'Rotate PDF Pages',
+        desc: 'Rotate individual pages or every page in your document by 90° left, 90° right, or 180°.',
+      },
+      compress: {
+        title: 'Compress PDF File Size',
+        desc: 'Shrink large PDF files quickly with selectable quality presets and exact before/after byte savings.',
+      },
+      convert: {
+        title: 'Convert Images, Word & Excel to PDF',
+        desc: 'Turn PNG, JPG, WebP images, Excel spreadsheets (.xlsx, .csv), and Word files into crisp PDFs in seconds.',
+      },
+      pdf2img: {
+        title: 'Export PDF Pages as PNG or JPG Images',
+        desc: 'Render every page of a PDF document into high-resolution PNG or JPG image files.',
+      },
+      word: {
+        title: 'Merge, Edit & Save Word Documents',
+        desc: 'Combine multiple Word (.docx) files into a live rich-text editor, edit freely, and export as PDF or Word.',
+      },
+      watermark: {
+        title: 'Add Text Watermark to PDF',
+        desc: 'Stamp customizable text watermarks across your PDF with live opacity, angle, size, and layout controls.',
+      },
+      encrypt: {
+        title: 'Encrypt & Password-Protect PDF',
+        desc: 'Secure your PDF with 128-bit encryption and configure printing, copying, and editing permissions.',
+      },
+      unlock: {
+        title: 'Unlock Password-Protected PDF',
+        desc: 'Supply the document password to permanently strip encryption and save an unrestricted copy.',
+      },
+      repair: {
+        title: 'Repair Damaged or Corrupted PDF',
+        desc: 'Fix missing EOF trailers, broken XRef tables, or malformed headers right inside your browser.',
+      },
     },
     common: {
       dropTitle: 'Drag & drop files here',
@@ -532,6 +1039,137 @@ export const translations: Record<Language, Translations> = {
       downloadAll: 'Download All',
       noSelectionError: 'Please select at least one page.',
       invalidRangeError: 'Please enter valid page numbers or ranges.',
+    },
+    organize: {
+      dropTitle: 'Drop a PDF file to organize pages',
+      dropHint: 'Reorder pages, duplicate important sheets, or remove unwanted pages',
+      selectPdf: 'Select PDF',
+      loadSample: 'Load 4-Page Sample PDF',
+      gridTitle: 'Page Order & Actions',
+      moveLeft: 'Move earlier',
+      moveRight: 'Move later',
+      duplicatePage: 'Duplicate page',
+      deletePage: 'Delete page',
+      resetOrder: 'Reset Order',
+      applyButton: 'Save Organized PDF',
+      resultTitle: 'Organized PDF Ready',
+      minOnePageError: 'The document must keep at least 1 page.',
+    },
+    rotate: {
+      dropTitle: 'Drop a PDF file to rotate',
+      dropHint: 'Rotate individual pages or apply a global angle across the whole document',
+      selectPdf: 'Select PDF',
+      loadSample: 'Load Sample PDF',
+      gridTitle: 'Page Thumbnails & Rotation',
+      rotateAllLeft: 'All 90° Left',
+      rotateAllRight: 'All 90° Right',
+      rotateAll180: 'All 180°',
+      resetAll: 'Reset',
+      rotateLeft: 'Rotate 90° Left',
+      rotateRight: 'Rotate 90° Right',
+      applyButton: 'Save Rotated PDF',
+      resultTitle: 'Rotated PDF Ready',
+      angleLabel: 'Angle',
+    },
+    watermark: {
+      dropTitle: 'Drop a PDF file to watermark',
+      dropHint: 'Stamp diagonal, tiled, or header/footer text across every page',
+      selectPdf: 'Select PDF',
+      loadSample: 'Load Sample PDF',
+      settingsTitle: 'Watermark Settings',
+      textLabel: 'Watermark Text',
+      defaultText: 'CONFIDENTIAL',
+      layoutLabel: 'Layout',
+      layouts: {
+        diagonal: 'Center Diagonal (-45°)',
+        tiled: 'Tiled Pattern (Grid)',
+        footer: 'Header / Footer Stamp',
+      },
+      opacityLabel: 'Opacity',
+      fontSizeLabel: 'Font Size',
+      colorLabel: 'Color',
+      colors: {
+        slate: 'Slate Gray',
+        crimson: 'Crimson Red',
+        blue: 'Navy Blue',
+      },
+      previewLabel: 'Live Placement Preview',
+      applyButton: 'Apply Watermark',
+      resultTitle: 'Watermarked PDF Ready',
+      emptyTextError: 'Please enter watermark text.',
+    },
+    pdf2img: {
+      dropTitle: 'Drop a PDF file to convert to images',
+      dropHint: 'Export every PDF page as crisp PNG or JPG image files',
+      selectPdf: 'Select PDF',
+      loadSample: 'Load Sample PDF',
+      formatLabel: 'Image Format',
+      scaleLabel: 'Resolution Quality',
+      scales: {
+        '1': 'Standard (1x)',
+        '2': 'High (2x — Recommended)',
+        '3': 'Ultra Crisp (3x)',
+      },
+      convertButton: 'Convert to Images',
+      resultsTitle: 'Exported Page Images',
+      downloadImage: 'Download Image',
+      downloadAll: 'Download All',
+    },
+    encrypt: {
+      dropTitle: 'Drop a PDF file to encrypt',
+      dropHint: 'Set a document open password and granular permissions right in your browser',
+      selectPdf: 'Select PDF',
+      loadSample: 'Load Sample PDF',
+      settingsTitle: 'Password & Permissions',
+      userPasswordLabel: 'Open Password (Required)',
+      userPasswordPlaceholder: 'Enter password required to open PDF',
+      confirmPasswordLabel: 'Confirm Password',
+      confirmPasswordPlaceholder: 'Re-enter password',
+      ownerPasswordLabel: 'Owner Password (Optional)',
+      ownerPasswordPlaceholder: 'Defaults to open password if left blank',
+      permissionsLabel: 'Document Permissions',
+      allowPrinting: 'Allow printing',
+      allowCopying: 'Allow copying text and images',
+      allowModifying: 'Allow modifying document',
+      encryptButton: 'Encrypt PDF',
+      resultTitle: 'Encrypted PDF Ready',
+      resultNote: 'This PDF now requires the password you set when opened.',
+      passwordRequiredError: 'Please enter an open password.',
+      passwordMismatchError: 'Passwords do not match.',
+      alreadyEncryptedError: 'This PDF is already encrypted. Use Unlock PDF first.',
+    },
+    unlock: {
+      dropTitle: 'Drop a password-protected PDF to unlock',
+      dropHint: 'Enter the PDF password to permanently strip encryption and restrictions',
+      selectPdf: 'Select Locked PDF',
+      loadSample: 'Load Sample Locked PDF (Password: 1234)',
+      sampleHint: 'Load the sample locked PDF and enter 1234 as the password to test.',
+      statusLocked: 'Password-protected PDF detected',
+      statusUnlocked: 'PDF is readable (can re-save unrestricted copy)',
+      passwordLabel: 'Document Password',
+      passwordPlaceholder: 'Enter current PDF password',
+      unlockButton: 'Unlock PDF',
+      resultTitle: 'Unlocked PDF Ready',
+      wrongPasswordError: 'Incorrect password. Please double-check and try again.',
+      passwordNeededError: 'This PDF requires a password to open. Please enter it.',
+      notEncryptedNote: 'No open password was set; saved a clean, unrestricted copy.',
+    },
+    repair: {
+      dropTitle: 'Drop a damaged or malformed PDF to repair',
+      dropHint: 'Fix missing EOF trailers, broken XRef tables, or leading byte corruption',
+      selectPdf: 'Select PDF',
+      loadSample: 'Load Sample Corrupted PDF',
+      diagnosticsTitle: 'Repair Diagnostics',
+      repairButton: 'Repair & Recover PDF',
+      resultTitle: 'Repaired PDF Ready',
+      statusHealthy: 'Structural validation and clean repackaging complete',
+      statusRecovered: 'Corruption detected and pages recovered successfully',
+      headerNormalized: 'Stripped invalid leading bytes before %PDF- header',
+      eofRestored: 'Restored missing %%EOF trailer marker',
+      xrefRebuilt: 'Rebuilt XRef cross-reference table and object streams',
+      rasterFallbackUsed: 'Severe corruption bypassed via high-DPI page reconstruction',
+      pagesRecoveredLabel: 'Pages Recovered',
+      cannotRepairError: 'The file is too severely corrupted or contains no valid PDF data.',
     },
     word: {
       queueTitle: 'Word Documents (.docx)',

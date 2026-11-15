@@ -13,6 +13,14 @@ import {
   parsePageSelection,
   parseRangeGroups,
   splitPdfPages,
+  rotatePdfPages,
+  organizePdfPages,
+  applyTextWatermarkToPdf,
+  encryptPdfBytes,
+  inspectPdfEncryption,
+  unlockPdfBytes,
+  repairPdfStructure,
+  createCorruptedSamplePdfBytes,
 } from './pdfCore';
 
 test('formatFileSize formats bytes, KB, and MB cleanly', () => {
@@ -122,5 +130,87 @@ test('splitPdfPages splits a multi-page PDF into independent PDF documents', asy
   assert.equal(docA.getPageCount(), 1);
   assert.equal(docB.getPageCount(), 2);
   assert.equal(docC.getPageCount(), 1);
+});
+
+test('rotatePdfPages updates page rotation angles accurately', async () => {
+  const src = await PDFDocument.create();
+  src.addPage([595, 842]);
+  src.addPage([595, 842]);
+  const srcBytes = new Uint8Array(await src.save());
+
+  const rotated = await rotatePdfPages(srcBytes, [90, 180]);
+  const loaded = await PDFDocument.load(rotated.bytes);
+  assert.equal(loaded.getPage(0).getRotation().angle, 90);
+  assert.equal(loaded.getPage(1).getRotation().angle, 180);
+});
+
+test('organizePdfPages reorders, duplicates, and removes pages cleanly', async () => {
+  const src = await PDFDocument.create();
+  src.addPage([400, 400]);
+  src.addPage([500, 500]);
+  src.addPage([600, 600]);
+  const srcBytes = new Uint8Array(await src.save());
+
+  const organized = await organizePdfPages(srcBytes, [2, 0, 2]);
+  assert.equal(organized.pageCount, 3);
+  const loaded = await PDFDocument.load(organized.bytes);
+  assert.equal(Math.round(loaded.getPage(0).getSize().width), 600);
+  assert.equal(Math.round(loaded.getPage(1).getSize().width), 400);
+  assert.equal(Math.round(loaded.getPage(2).getSize().width), 600);
+});
+
+test('applyTextWatermarkToPdf stamps watermark across pages', async () => {
+  const src = await PDFDocument.create();
+  src.addPage([595, 842]);
+  src.addPage([595, 842]);
+  const srcBytes = new Uint8Array(await src.save());
+
+  const stamped = await applyTextWatermarkToPdf(srcBytes, {
+    text: 'CONFIDENTIAL',
+    layout: 'diagonal',
+    opacity: 0.3,
+    fontSize: 36,
+    color: 'crimson',
+  });
+  assert.equal(stamped.pageCount, 2);
+  assert.ok(stamped.bytes.byteLength > srcBytes.byteLength);
+});
+
+test('encryptPdfBytes, inspectPdfEncryption, and unlockPdfBytes round-trip password protection', async () => {
+  const src = await PDFDocument.create();
+  src.addPage([595, 842]);
+  const srcBytes = new Uint8Array(await src.save());
+
+  const encrypted = await encryptPdfBytes(srcBytes, {
+    userPassword: 'secret-123',
+    allowPrinting: true,
+    allowCopying: false,
+    allowModifying: false,
+  });
+
+  const inspection = await inspectPdfEncryption(encrypted.bytes);
+  assert.equal(inspection.isEncrypted, true);
+
+  await assert.rejects(() => unlockPdfBytes(encrypted.bytes, ''), /PASSWORD_REQUIRED/);
+  await assert.rejects(() => unlockPdfBytes(encrypted.bytes, 'wrong'), /PASSWORD_INCORRECT/);
+
+  const unlocked = await unlockPdfBytes(encrypted.bytes, 'secret-123');
+  assert.equal(unlocked.wasEncrypted, true);
+  assert.equal(unlocked.pageCount, 1);
+
+  const postInspection = await inspectPdfEncryption(unlocked.bytes);
+  assert.equal(postInspection.isEncrypted, false);
+});
+
+test('repairPdfStructure recovers corrupted header and missing %%EOF PDF', async () => {
+  const corrupt = await createCorruptedSamplePdfBytes('tr');
+  const repaired = await repairPdfStructure(corrupt);
+  assert.equal(repaired.diagnostics.headerNormalized, true);
+  assert.equal(repaired.diagnostics.eofRestored, true);
+  assert.equal(repaired.diagnostics.xrefRebuilt, true);
+  assert.equal(repaired.diagnostics.recoveredPages, 3);
+
+  const reloaded = await PDFDocument.load(repaired.bytes);
+  assert.equal(reloaded.getPageCount(), 3);
 });
 
