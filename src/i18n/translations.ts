@@ -12,11 +12,12 @@ export type ToolId =
   | 'watermark'
   | 'encrypt'
   | 'unlock'
-  | 'repair';
+  | 'repair'
+  | 'cad';
 
 export type ToolTab = 'home' | ToolId;
 
-export type ToolCategory = 'all' | 'organize' | 'convert' | 'security';
+export type ToolCategory = 'all' | 'organize' | 'convert' | 'security' | 'cad';
 
 export interface ToolCardMeta {
   title: string;
@@ -32,6 +33,7 @@ export interface Translations {
     split: string;
     convert: string;
     compress: string;
+    cad: string;
   };
   home: {
     title: string;
@@ -346,6 +348,50 @@ export interface Translations {
     done: string;
     downloadAll: string;
   };
+  cad: {
+    dropTitle: string;
+    dropHint: string;
+    supportedFormats: string;
+    selectFile: string;
+    samplesLabel: string;
+    sampleStl: string;
+    sampleStep: string;
+    sampleDxf: string;
+    samplePlt: string;
+    sampleSvg: string;
+    views: {
+      iso: string;
+      top: string;
+      front: string;
+      right: string;
+      reset: string;
+    };
+    controls: {
+      wireframe: string;
+      edges: string;
+      grid: string;
+      darkBg: string;
+      lightBg: string;
+      showControls: string;
+      hideControls: string;
+      svgSheetMode: string;
+      cadVectorMode: string;
+    };
+    stats: {
+      format: string;
+      dimensions: string;
+      entities: string;
+      triangles: string;
+      layersTitle: string;
+      allLayersOn: string;
+      noLayers: string;
+      exportPng: string;
+      exportPdf: string;
+      replaceFile: string;
+    };
+    loadingWasm: string;
+    unsupportedError: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -357,6 +403,7 @@ export const translations: Record<Language, Translations> = {
       split: 'Ayır',
       convert: 'Dönüştür',
       compress: 'Sıkıştır',
+      cad: 'CAD & 3D',
     },
     home: {
       title: 'Tüm PDF ve Belge Araçları Tek Yerde',
@@ -365,10 +412,11 @@ export const translations: Record<Language, Translations> = {
       backToAll: 'Tüm Araçlar',
       openTool: 'Aracı Aç',
       categories: {
-        all: 'Tümü (12)',
+        all: 'Tümü (13)',
         organize: 'Sayfa Düzenleme',
         convert: 'Dönüştürme & Word',
         security: 'Güvenlik & Onarım',
+        cad: 'CAD & 3D',
       },
       tools: {
         merge: {
@@ -431,6 +479,11 @@ export const translations: Record<Language, Translations> = {
           desc: 'Hasarlı XRef tablosu veya bozuk yapılı PDF dosyalarını kurtarın.',
           category: 'security',
         },
+        cad: {
+          title: 'CAD Görüntüleyici',
+          desc: 'DWG, DXF, DWF, STEP, IGES, STL, PLT ve SVG dosyalarını 2D/3D açın.',
+          category: 'cad',
+        },
       },
     },
     hero: {
@@ -481,6 +534,10 @@ export const translations: Record<Language, Translations> = {
       repair: {
         title: 'Bozuk veya Hasarlı PDF Dosyasını Onar',
         desc: 'Eksik son işaretçisi, bozuk XRef tablosu veya açılmayan yapıya sahip PDF’leri tarayıcı içinde kurtarın.',
+      },
+      cad: {
+        title: 'Tarayıcı İçi 2D / 3D CAD Görüntüleyici',
+        desc: 'DWG, DXF, DWF, STEP, IGES, STL, PLT ve SVG teknik çizim ile 3D modelleri sunucuya yüklemeden açın.',
       },
     },
     common: {
@@ -809,6 +866,50 @@ export const translations: Record<Language, Translations> = {
       done: 'Tamamlandı',
       downloadAll: 'Tümünü İndir',
     },
+    cad: {
+      dropTitle: 'CAD veya 3D dosyasını buraya sürükleyip bırakın',
+      dropHint: 'DWG, DXF, DWF/DWFx, STEP, IGES, STL, PLT ve SVG dosyaları cihazınızdan dışarı çıkmadan açılır',
+      supportedFormats: 'Desteklenen Formatlar: DWG, DXF, DWF, DWFx, STEP, STP, IGES, IGS, STL, PLT, SVG',
+      selectFile: 'CAD Dosyası Seç',
+      samplesLabel: 'Hızlı Test Örnekleri:',
+      sampleStl: '3D STL Parça',
+      sampleStep: '3D STEP (CAD)',
+      sampleDxf: 'DXF Plan',
+      samplePlt: 'PLT Çizici',
+      sampleSvg: 'SVG Şema',
+      views: {
+        iso: 'İzo',
+        top: 'Üst',
+        front: 'Ön',
+        right: 'Sağ',
+        reset: 'Sıfırla',
+      },
+      controls: {
+        wireframe: 'Tel Kafes',
+        edges: 'Kenar Çizgisi',
+        grid: 'Izgara',
+        darkBg: 'Koyu Tuval',
+        lightBg: 'Açık Tuval',
+        showControls: 'Kontrolleri Göster',
+        hideControls: 'Kontrolleri Gizle',
+        svgSheetMode: 'SVG Sayfa',
+        cadVectorMode: '3D Vektör',
+      },
+      stats: {
+        format: 'Format',
+        dimensions: 'Ölçüler (G × Y × D)',
+        entities: 'Varlık / Parça',
+        triangles: 'Üçgen Sayısı',
+        layersTitle: 'Katmanlar & Parçalar',
+        allLayersOn: 'Tümünü Aç',
+        noLayers: 'Katman bilgisi yok',
+        exportPng: 'PNG Kaydet',
+        exportPdf: 'PDF Olarak Kaydet',
+        replaceFile: 'Başka Dosya Aç',
+      },
+      loadingWasm: 'CAD motoru hazırlanıyor ve geometri çözümleniyor...',
+      unsupportedError: 'Desteklenmeyen dosya formatı. Lütfen DWG, DXF, DWF, STEP, IGES, STL, PLT veya SVG seçin.',
+    },
   },
   en: {
     appName: 'PDF Labs',
@@ -818,6 +919,7 @@ export const translations: Record<Language, Translations> = {
       split: 'Split',
       convert: 'Convert',
       compress: 'Compress',
+      cad: 'CAD & 3D',
     },
     home: {
       title: 'Every PDF & Document Tool in One Place',
@@ -826,10 +928,11 @@ export const translations: Record<Language, Translations> = {
       backToAll: 'All Tools',
       openTool: 'Open Tool',
       categories: {
-        all: 'All (12)',
+        all: 'All (13)',
         organize: 'Organize & Optimize',
         convert: 'Convert & Word',
         security: 'Security & Repair',
+        cad: 'CAD & 3D',
       },
       tools: {
         merge: {
@@ -892,6 +995,11 @@ export const translations: Record<Language, Translations> = {
           desc: 'Recover PDFs with damaged XRef tables, headers, or EOF markers.',
           category: 'security',
         },
+        cad: {
+          title: 'CAD Viewer',
+          desc: 'Inspect DWG, DXF, DWF, STEP, IGES, STL, PLT, and SVG locally.',
+          category: 'cad',
+        },
       },
     },
     hero: {
@@ -942,6 +1050,10 @@ export const translations: Record<Language, Translations> = {
       repair: {
         title: 'Repair Damaged or Corrupted PDF',
         desc: 'Fix missing EOF trailers, broken XRef tables, or malformed headers right inside your browser.',
+      },
+      cad: {
+        title: 'In-Browser 2D / 3D CAD Viewer',
+        desc: 'Open DWG, DXF, DWF, STEP, IGES, STL, PLT, and SVG engineering drawings and 3D models with zero uploads.',
       },
     },
     common: {
@@ -1269,6 +1381,50 @@ export const translations: Record<Language, Translations> = {
       compressing: 'Compressing...',
       done: 'Done',
       downloadAll: 'Download All',
+    },
+    cad: {
+      dropTitle: 'Drop a CAD or 3D file here',
+      dropHint: 'DWG, DXF, DWF/DWFx, STEP, IGES, STL, PLT, and SVG open locally without leaving your device',
+      supportedFormats: 'Supported Formats: DWG, DXF, DWF, DWFx, STEP, STP, IGES, IGS, STL, PLT, SVG',
+      selectFile: 'Select CAD File',
+      samplesLabel: 'Instant Test Samples:',
+      sampleStl: '3D STL Part',
+      sampleStep: '3D STEP (CAD)',
+      sampleDxf: 'DXF Floorplan',
+      samplePlt: 'PLT Plotter',
+      sampleSvg: 'SVG Schematic',
+      views: {
+        iso: 'Iso',
+        top: 'Top',
+        front: 'Front',
+        right: 'Right',
+        reset: 'Reset',
+      },
+      controls: {
+        wireframe: 'Wireframe',
+        edges: 'Edge Lines',
+        grid: 'Grid',
+        darkBg: 'Dark Canvas',
+        lightBg: 'Light Canvas',
+        showControls: 'Show Controls',
+        hideControls: 'Hide Controls',
+        svgSheetMode: 'SVG Sheet',
+        cadVectorMode: '3D Vector',
+      },
+      stats: {
+        format: 'Format',
+        dimensions: 'Bounds (W × H × D)',
+        entities: 'Entities / Parts',
+        triangles: 'Triangles',
+        layersTitle: 'Layers & Parts',
+        allLayersOn: 'Show All',
+        noLayers: 'No layers found',
+        exportPng: 'Export PNG',
+        exportPdf: 'Save as PDF',
+        replaceFile: 'Open Another File',
+      },
+      loadingWasm: 'Initializing CAD engine and tessellating geometry...',
+      unsupportedError: 'Unsupported file format. Please choose DWG, DXF, DWF, STEP, IGES, STL, PLT, or SVG.',
     },
   },
 };

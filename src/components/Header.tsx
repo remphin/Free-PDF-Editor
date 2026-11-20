@@ -15,6 +15,7 @@ export function Header({ activeTab, onTabChange, lang, onLangChange, t }: Header
     { id: 'split', label: t.nav.split },
     { id: 'convert', label: t.nav.convert },
     { id: 'compress', label: t.nav.compress },
+    { id: 'cad', label: t.nav.cad },
   ];
 
   return (
@@ -32,7 +33,7 @@ export function Header({ activeTab, onTabChange, lang, onLangChange, t }: Header
           {t.appName}
         </a>
 
-        {/* Zone 2: 5 Concise Single-line Quick Links */}
+        {/* Zone 2: Concise Single-line Quick Links */}
         <nav aria-label="Main tools" className="hidden md:flex items-center gap-6">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
@@ -98,7 +99,7 @@ export function Header({ activeTab, onTabChange, lang, onLangChange, t }: Header
       {/* Mobile compact single-row quick nav */}
       <nav
         aria-label="Mobile tools"
-        className="md:hidden border-t border-slate-100 grid grid-cols-5 bg-white"
+        className="md:hidden border-t border-slate-100 grid grid-cols-6 bg-white"
       >
         {navItems.map((item) => {
           const isActive = activeTab === item.id;

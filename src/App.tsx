@@ -15,6 +15,7 @@ import { EncryptPdfTool } from './components/EncryptPdfTool';
 import { UnlockPdfTool } from './components/UnlockPdfTool';
 import { RepairPdfTool } from './components/RepairPdfTool';
 import { CompressPdfTool } from './components/CompressPdfTool';
+import { CadViewerTool } from './components/CadViewerTool';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('tr');
@@ -85,6 +86,7 @@ export default function App() {
             {activeTab === 'encrypt' && <EncryptPdfTool lang={lang} t={t} />}
             {activeTab === 'unlock' && <UnlockPdfTool lang={lang} t={t} />}
             {activeTab === 'repair' && <RepairPdfTool lang={lang} t={t} />}
+            {activeTab === 'cad' && <CadViewerTool lang={lang} t={t} />}
           </>
         )}
       </main>

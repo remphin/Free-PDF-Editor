@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   ArrowRight,
+  Box,
   FileDown,
   FileImage,
   FileOutput,
@@ -41,12 +42,13 @@ const TOOL_DEFINITIONS: ToolDefinition[] = [
   { id: 'encrypt', icon: Lock, toneClass: 'bg-rose-50 text-rose-700 border-rose-100' },
   { id: 'unlock', icon: LockOpen, toneClass: 'bg-teal-50 text-teal-700 border-teal-100' },
   { id: 'repair', icon: Wrench, toneClass: 'bg-orange-50 text-orange-700 border-orange-100' },
+  { id: 'cad', icon: Box, toneClass: 'bg-sky-50 text-sky-700 border-sky-100' },
 ];
 
 export function HomeHub({ onSelectTool, t }: HomeHubProps) {
   const [category, setCategory] = useState<ToolCategory>('all');
 
-  const categories: ToolCategory[] = ['all', 'organize', 'convert', 'security'];
+  const categories: ToolCategory[] = ['all', 'organize', 'convert', 'security', 'cad'];
 
   const visibleTools = TOOL_DEFINITIONS.filter((tool) => {
     if (category === 'all') return true;
